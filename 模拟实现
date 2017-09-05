@@ -1,0 +1,236 @@
+第一种方法是用计数器模拟实现strlen函数。  
+#include<stdio.h>  
+#include<assert.h>  
+int my_strlen(const char *str)  
+{  
+    int count = 0;  
+    assert(str!=NULL);  
+    while(*str)  
+    {  
+        str++;  
+        count++;  
+    }  
+    return count;  
+}  
+int main()  
+{  
+    int ret = 0;  
+    char arr[10]="abcdefgh";  
+    ret = my_strlen(arr);  
+    printf("%d\n",ret);  
+    return 0;  
+}  
+第二种方法是用指针减指针的方法模拟实现strlen函数。  
+1.0
+#include<stdio.h>  
+int my_strlen(const char *str)  
+{  
+    const char *p = str;  
+    while(*p)           //while(*p++)
+    {                   //{
+        p++;            //   ;
+    }                   //}
+    return p-str;       //return p-str-1
+}  
+int main()  
+{  
+    int ret = 0;  
+    char arr[10]="abcdefgh";  
+    ret = my_strlen(arr);  
+    printf("%d\n",ret);  
+    return 0;  
+} 
+
+ 
+第三种是用函数递归的方法模拟实现strlen函数。  
+#include<stdio.h>  
+int my_strlen(const char *str)  
+{  
+    if(*str=='\0')  
+        return 0;  
+    else  
+    return 1+my_strlen(str+1);  
+}  
+int main()  
+{  
+    int ret = 0;  
+    char arr[10]="abcdefgh";  
+    ret = my_strlen(arr);  
+    printf("%d\n",ret);  
+    return 0;  
+}  
+1.模拟实现strcpy
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<assert.h>
+char *my_strcpy(char *dst, const char *src)
+{
+    assert(dst != NULL);
+    assert(src != NULL);
+    char *ret = dst;
+    while (*dst++ = *src++)
+        ;
+    return ret;
+}
+int main()
+{
+    char arr1[] = "hello world!!!";
+    char arr2[20];
+    my_strcpy(arr2, arr1);
+    printf("%s\n", arr2);
+    system("pause");
+      return 0;
+}
+3.模拟实现strcat
+char* my_strcat(char* dest,char* src)
+{
+  char *cp=dest;
+  assert(src && dest);
+  while(*dest!='\0')
+  {
+    dest++;
+  }
+  while(*dest++=*src++)
+  {
+    ;
+  }
+ return cp;
+}
+
+int main()
+{
+   char arr1[15]="abcd";
+   char *arr2="ef";
+   printf("%s\n",my_strcat(arr1,arr2));
+   return 0;
+}
+4.模拟实现strcmp
+int my_strcmp(char* arr1,char* arr2)
+{
+  assert(arr1 && arr2)
+  while(*arr1==*arr2)
+  {
+   if(*arr1=='\0')
+     return 0;
+  }
+ return *arr1-*arr2;
+}
+
+int main()
+{
+ char *arr1="abcde";
+ char *arr2="abcd";
+ int ret=my_strcmp(arr1,arr2);
+ printf("%d\n",ret);
+}
+5.模拟实现strstr
+#include<stdio.h>
+#include<assert.h>
+
+const char *my_strstr(const char* src, const char* dest)
+{
+const char* str1 = src;
+const char* str2 = dest;
+const char* start = NULL;
+assert(str1);
+assert(str2);
+if (*str2 == '\0')
+{
+return str1;
+}
+while (*str1)
+{
+start = str1;
+while ((*str1) && (*str2) && (*str1 == *str2))
+{
+str1++;
+str2++;
+}
+if (*str2 == '\0')
+{
+return start;
+}
+str1 = start + 1;
+str2 = dest;
+}
+return NULL;
+}
+int main()
+{
+const char* src = "abbbcedf";
+const char* dest = "bce";
+    char *ret=my_strstr(src, dest);
+if (NULL == ret)
+{
+printf("not exit");
+}
+else
+{
+printf("exit");
+}
+system("pause");
+return 0;
+}
+6.模拟实现memcpy
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<stdio.h>
+#include<stdlib.h>
+#include<assert.h>
+void* my_memcpy(void* dest, const void* src, size_t n)  
+{  
+    assert(dest);  
+    assert(src);  
+    char* pdest = (char*)dest;  
+    const char* psrc = (const char*)src;  
+    while (n--)  
+    {  
+        *pdest++ = *psrc++;  
+    }  
+    return dest;  
+}
+int main ()
+{
+  char str1[]="Sample string";
+  char str2[40];
+  my_memcpy (str2,str1,strlen(str1)+1);
+  printf ("str1: %s\nstr2: %s\n",str1,str2);
+  return 0;
+}
+7.模拟实现memmove
+void* my_memmove(void* dest, void* src, size_t n)  
+{  
+    void* ret = dest;  
+    char* str1 = (char*)dest;  
+    char* str2 = (char*)src;  
+    assert(dest);  
+    assert(src);  
+    if (str1 > str2)   
+    {  
+        while (n--)  
+        {  
+            *(str1 + n) = *(str2 + n);  
+        }  
+    }  
+    else  
+    {  
+        while (n--)  
+        {  
+            *str1++ = *str2++;  
+        }  
+    }  
+    return ret;  
+}  
+int main()  
+{  
+    int i = 0;   
+    int arr3[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };   
+    my_memmove(arr3 + 5, arr3 + 4, 3 * sizeof(int));  
+      
+    for (i = 0; i < 10; i++)  
+    {  
+        printf("%d ", arr3[i]);  
+    }  
+    system("pause");  
+    return 0;  
+}  
