@@ -1,0 +1,84 @@
+mock implementationstrncpy
+#include<stdio.h>
+#include<string.h>
+#include<assert.h>
+#include<windows.h>
+char* my_strncpy(char*dst, const char*src, int len)
+{
+assert(dst!=NULL&&src!=NULL);
+	char* ch = dst;
+	while (len--)
+	{
+		*dst++ = *src++;
+	}
+	if (len = 0)
+		*dst = '\0';
+	return dst;
+ }
+int main()
+{
+	char a[20] = {0};
+	int len = strlen("hello world");
+	my_strncpy(a, "hello world", len);
+	printf("%s", a);
+	system("pause");
+	return 0;
+}
+mock implementationstrncmp
+#include<stdio.h>
+#include<string.h>
+#include<assert.h>
+#include<windows.h>
+int my_strncmp(const char*dst, const char*src, int len)
+{
+	assert(dst != NULL&&src!=NULL);
+	while ((len--) && (*src == *dst))
+	{
+		if (*dst == '\0')
+			return 0;
+		dst++;
+		src++;
+	}
+	return *dst - *src;
+}
+int main()
+{
+	char a[20] = "abcdef";
+	char*b = "abc";
+	int len = strlen(a);
+    printf("%d",my_strncmp(a, b, len));
+	system("pause");
+	return 0;
+}
+mock implementationstrncmp
+#include<stdio.h>
+#include<string.h>
+#include<assert.h>
+#include<windows.h>
+ char * my_strncat(char*dst, const char*src, int len)
+	{
+		char *cp = dst;
+		assert(src!=NULL && dst!=NULL);
+		while (*dst!='\0')
+		{
+			dst++;
+		}
+		while (len&&src)
+		{
+			len--;
+			*dst++ = *src++;
+		 }
+		*dst = '\0';
+		return cp;
+	}
+
+	int main()
+	{
+		char arr[20] = "hello";
+		int len = strlen(arr);
+		printf("%d", len);
+		char *ret = my_strncat(arr, arr, len);
+		printf("%s", ret);
+		system("pause");
+		return 0;
+	}
