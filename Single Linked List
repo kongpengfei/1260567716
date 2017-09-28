@@ -1,0 +1,214 @@
+Node.h
+#ifndef __NODE_H__
+#define __NODE_H__
+typedef int DataType;
+#define NULL 0
+#include<stdio.h>
+#include<windows.h>
+#include<assert.h>
+typedef struct Node
+{
+	DataType data;
+	struct Node*next;
+}Node, *LinkList;
+void InitList(LinkList *L);
+LinkList BuyNode(DataType data);
+void PrintList(LinkList L);
+LinkList Find(LinkList* L, DataType data);
+void PushBack(LinkList* L, DataType data);
+void PushFront(LinkList* L, DataType data);
+void PopBack(LinkList* L);
+void PopFront(LinkList* L);
+void Destroy(LinkList* L);
+size_t Size(LinkList L);
+void Erase(LinkList* L,LinkList pos);
+void Insert(LinkList pos, DataType data);
+#endif//__NODE_H__
+
+
+Node.c
+
+
+#define _CRT_SECURE_NO_WARNINGS 1
+#include"node.h"
+void InitList(LinkList *L)
+{
+	*L = (Node*)malloc(sizeof(Node));
+	if (*L == NULL){
+		printf("申请内存空间失败");
+	}
+	(*L)->next = NULL;
+	(*L)->data =NULL;
+}
+LinkList BuyNode(DataType data)
+{
+	LinkList NewNode = NULL;
+	NewNode = (LinkList)malloc(sizeof(Node));
+	if (NewNode == NULL){
+		printf("为节点创建空间失败");
+	}
+	NewNode->data = data;
+	NewNode->next = NULL;
+    return NewNode;
+}
+void PrintList(LinkList L)
+{
+	LinkList Cur = L;
+	if (L == NULL){
+		printf("NULL");
+	}
+	while (Cur->next)
+	{
+		printf("%d--->", Cur->data);
+		Cur = Cur->next;
+	}
+	printf("%d--->", Cur->data);
+	printf("\n");
+}
+LinkList Find(LinkList* L, DataType data)
+{
+	assert(L);
+	if (*L == NULL){
+		return NULL;
+	}
+	LinkList Cur = *L;
+	while (Cur->next!=NULL)
+	{
+		if (Cur->data== data){
+			return Cur;
+		}
+		else
+			Cur = Cur->next;
+	}
+	if (Cur->data == data){
+		return Cur;
+	}
+	return Cur;
+}
+void PushBack(LinkList* L, DataType data)
+{
+	assert(L);
+	LinkList Cur = *L;
+	if (Cur== NULL){
+		Cur = BuyNode(data);
+	}
+	while (Cur->next)
+	{
+	    Cur = Cur->next;
+	}
+	Cur->next= BuyNode(data);
+}
+void PushFront(LinkList* L, DataType data)
+{
+	assert(L);
+	LinkList Cur = *L;
+	if (Cur == NULL){
+		*L = BuyNode(data);
+	}
+	*L = BuyNode(data);
+	(*L)->next = Cur;
+}
+void PopBack(LinkList*L)
+{
+	LinkList Cur = *L;
+	LinkList Pre = NULL;
+	assert(L);
+	if (Cur->next == NULL || Cur == NULL)
+		return NULL;
+	while (Cur->next){
+		Pre = Cur;
+		Cur = Cur->next;
+	}
+	free(Pre->next);
+	Pre->next = NULL;
+}
+void PopFront(LinkList* L)
+{
+	LinkList Cur = *L;
+	assert(L);
+	if (Cur->next==NULL||Cur==NULL)
+		return NULL;
+	*L=(*L)->next;
+	free(Cur);
+}
+size_t Size(LinkList L)
+{
+	LinkList Cur = L;
+	int count = 0;
+	while (Cur->next){
+		count++;
+		Cur = Cur->next;
+	}
+	return count + 1;
+}
+
+void Erase(LinkList* L, LinkList pos)
+{
+	LinkList Cur = *L;
+	LinkList Pre = NULL;
+	assert(L);
+	if (*L == NULL || pos == NULL)
+		return;
+	if (*L == pos)
+		return NULL;
+
+	while (Cur->next){
+		Pre = Cur;
+		Cur = Cur->next;
+		if (Cur == pos){
+			Pre->next = pos->next;
+			break;
+		}
+	}
+}
+void Insert(LinkList pos, DataType data)
+{
+	LinkList NewNode = BuyNode(data);
+	if (pos == NULL)
+		return;
+	NewNode->next = pos->next;
+	pos->next = NewNode;
+}
+void Destroy(LinkList* L)
+{
+	LinkList Cur = NULL;
+	if (*L == NULL)
+		return NULL;
+	while (*L)
+	{
+		Cur = *L;
+		*L = (*L)->next;
+		free(Cur);
+	}
+}
+
+
+test.c
+
+#define _CRT_SECURE_NO_WARNINGS 1
+#include"Node.h"
+void test()
+{
+	LinkList M = NULL;
+	InitList(&M);
+	PushFront(&M, 2);
+	PushBack(&M, 3);
+	PushBack(&M, 4);
+	PushBack(&M, 5);
+	PushBack(&M, 6);
+	PushBack(&M, 7);
+	PopBack(&M);
+	PopFront(&M);
+	Erase(&M, Find(&M,3));
+	Insert(Find(&M,0), 3);
+	printf("%d\n",Size(M));
+	PrintList(M);
+	Destroy(&M);
+}
+int main()
+{
+
+	test();
+	system("pause");
+	return 0;
+}
