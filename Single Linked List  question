@@ -1,0 +1,139 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#define DataType int
+#include<stdio.h>
+#include<assert.h>
+//1.reverse print single linked list     
+typedef struct Node
+{
+	DataType data;
+	struct Node*next;
+}Node, *LinkList;
+
+void PrintfListFromTail2Head(LinkList L)
+{
+	while (L){
+		PrintfListFromTail2Head(L->next);
+		printf("%d-->",L->data);
+	}
+}
+//2.reverse destruction of single linked list
+//void DestroyList(LinkList* L)
+//{
+//	LinkList* M = L;
+//	assert(L);
+//	while(*L)
+//	{
+//		(*L) = (*L)->next;
+//		L = &(*L);
+//		void DestroyList(L);
+//		free(*L);
+//	}
+//	free(*M);
+//}
+//3.delete single linked list non-end nodes
+void DeleteNotTailNode(LinkList pos)
+{
+	if (pos == NULL || pos->next == NULL)
+		return;
+	LinkList pDel = pos->next;
+	pos->data = pDel->data;
+	pos->next = pDel->next;
+	free(pDel);
+	pDel = NULL;
+}
+//4.non-head node insert data
+void InsertNotHead(LinkList pos, DataType data)
+{
+	DataType Cur =0;
+	LinkList NewNode=0;
+	Cur = pos->data;
+	if (pos == NULL)
+		return;
+	LinkList NewNode = BuyNode(data);
+	if (NewNode == NULL)
+		return;
+	NewNode->next = pos->next;
+	pos->next = NewNode;
+	pos->data = NewNode->data;
+	NewNode->data = Cur;
+}
+//5. single linked list implments Joseph loop
+LinkList JosephCircle(LinkList L, size_t M)
+{
+	int count = M;
+	if (L == NULL || L->next == NULL)
+		return L;
+	LinkList Cur = L;
+	while (Cur->next)       //forming circle
+		Cur = Cur->next;
+	Cur->next = L;
+	Cur = L;
+	while (Cur != Cur->next)
+	{
+		while (--count)     //count off
+		{
+			Cur = Cur->next;
+		}
+		LinkList pDel = Cur->next;   //delete node with replacement method
+		Cur->data = pDel->data;
+		Cur->next = pDel->next;
+		free(pDel);
+		pDel = NULL;
+	}
+	Cur->next = NULL;        //unlink
+	return Cur;
+}
+//6.single linked list inverse----insert in head
+LinkList ReverseList(LinkList L)
+{
+	if (L == NULL || L->next == NULL)
+		return;
+	LinkList NewNode = NULL;
+	LinkList Pre = L;
+	LinkList Cur = Pre->next;
+	while (Cur)
+	{
+		Pre->next = NewNode;
+		NewNode = Pre;
+		Pre = Cur;
+		Cur = Cur->next;
+	}
+	Pre->next = NewNode;
+	return NewNode;
+}
+//7.single linked list inverse----before and after pointer
+LinkList ReverseList(LinkList L)
+{
+	if (L == NULL || L->next == NULL)
+		return;
+	LinkList Pre = L;
+	LinkList Cur = Pre->next;
+	LinkList Next = Cur->next;
+	L->next = NULL;
+	while (Next)
+	{
+		Cur->next = Pre;
+		Pre = Cur;
+		Cur = Cur->next;
+		Next = Next->next;
+	}
+	Cur->next = Pre;
+	return Cur;
+}
+//8.Find the middle node of the single linked list---demand not iterate through the single linked list
+LinkList FindMidNode(LinkList L)
+{
+	LinkList Slow = L;
+	LinkList Fast = L;
+	LinkList Cur = NULL;
+	while (Fast&&Fast->next){
+		Cur = Slow;
+		Slow = Slow->next;
+		Fast = Fast->next;
+		Fast = Fast->next;
+	}
+	if (Fast == NULL)          //even number
+		return Cur, Slow;      
+	if (Fast->next == NULL)    //odder number
+		return Slow;
+}
