@@ -1,0 +1,177 @@
+Question：Judging whether a single linked list has a circle. If we take the ring, we want the length of the circle, right?
+What is the entrance node of the circle?
+#define _CRT_SECURE_NO_WARNINGS 1
+typedef int DataType;
+#define NULL 0
+#include<stdio.h>
+#include<windows.h>
+#include<assert.h>
+typedef struct Node
+{
+	DataType data;
+	struct Node*next;
+}Node, *LinkList;
+void InitList(LinkList *L)
+{
+	*L = (Node*)malloc(sizeof(Node));
+	if (*L == NULL){
+		printf("Failed to apply for memory space");
+	}
+	(*L)->next = NULL;
+}
+LinkList BuyNode(DataType data)
+{
+	LinkList NewNode = NULL;
+	NewNode = (LinkList)malloc(sizeof(Node));
+	if (NewNode == NULL){
+		printf("Failed to create space for the node");
+	}
+	NewNode->data = data;
+	NewNode->next = NULL;
+	return NewNode;
+}
+void PrintList(LinkList L)
+{
+	LinkList Cur = L;
+	if (L == NULL){
+		printf("NULL");
+
+	}
+	Cur = Cur->next;
+	while (Cur)
+	{
+		if (Cur == NULL)
+			return;
+		printf("%d--->", Cur->data);
+		Cur = Cur->next;
+	}
+	printf("NULL\n");
+}
+void PushBack(LinkList* L, DataType data)
+{
+	assert(L);
+	LinkList Cur = *L;
+	if (Cur == NULL){
+		Cur = BuyNode(data);
+	}
+	while (Cur->next)
+	{
+		Cur = Cur->next;
+	}
+	Cur->next = BuyNode(data);
+}
+LinkList Find(LinkList L, DataType data)
+{
+	assert(L);
+	if (L == NULL){
+		return NULL;
+	}
+	LinkList Cur = L;
+	while (Cur!= NULL)
+	{
+		if (Cur->data == data){
+			return Cur;
+		}
+		Cur = Cur->next;
+	}
+	return NULL;
+}
+//Judging whether a single linked list has a circle
+LinkList HasCircle(LinkList L)
+{
+	LinkList Fast = L;
+	LinkList Slow = L;
+	while (Fast&&Fast->next){
+		Fast = Fast->next->next;
+		Slow = Slow->next;
+		if (Slow == Fast)
+			return Slow;
+	}
+	return NULL;
+}
+//The circle's length of single link list 
+int GetCircleLen(LinkList L)
+{
+	int count = 1;
+	LinkList MeetNode = NULL;
+	LinkList Cur = L;
+	MeetNode = HasCircle(L);
+	if (MeetNode == NULL)
+		return 0;
+	while (Cur->next != MeetNode)
+	{
+		count++;
+		Cur = Cur->next;
+	}
+	return count;
+}
+///The entrance's node of single link list with ring
+LinkList GetEntranceNode(LinkList L,LinkList MeetNode)
+{
+	LinkList P2 = NULL;
+	LinkList P1 = L;
+	if (MeetNode == NULL || L == NULL)
+		return NULL;
+	P2 = MeetNode;
+	while (P1 != P2)
+	{
+		P1 = P1->next;
+		P2 = P2->next;
+	}
+	return P1;
+}
+test3()
+{
+	LinkList L = NULL;
+	LinkList M = NULL;
+	LinkList S = NULL;
+	InitList(&L);
+	PrintList(L);
+	PushBack(&L, 1);
+	PushBack(&L, 2);
+	PushBack(&L, 4);
+	PushBack(&L, 5);
+	PushBack(&L, 6);
+	M = Find(L, 6);
+	M->next = Find(L, 2);
+	PrintList(L);
+}
+test4()
+{
+	LinkList L = NULL;
+	LinkList M = NULL;
+	InitList(&L);
+	PrintList(L);
+	PushBack(&L, 1);
+	PushBack(&L, 2);
+	PushBack(&L, 4);
+	PushBack(&L, 5);
+	PushBack(&L, 6);
+	M = Find(L, 6);
+	M->next = Find(L, 2);
+	printf("%d", GetCircleLen(L));
+}
+test5()
+{
+	LinkList L = NULL;
+	LinkList M = NULL;
+	InitList(&L);
+	PrintList(L);
+	PushBack(&L, 1);
+	PushBack(&L, 2);
+	PushBack(&L, 4);
+	PushBack(&L, 5);
+	PushBack(&L, 6);
+	M = Find(L, 6);
+	M->next = Find(L, 2);
+	LinkList NewNode = GetEntranceNode(L,HasCircle(L));
+	printf("%d", NewNode->data);
+}
+int main()
+{
+	test5();
+	//test4();
+	//test3();
+	system("pause");
+	return 0;
+}
