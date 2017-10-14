@@ -1,0 +1,176 @@
+Merge ordered single linked lists and sort them
+LinkList MergeLinkList(LinkList L1, LinkList L2)
+{
+    LinkList PnewHead = NULL;
+    LinkList PL1 = L1;
+    LinkList PL2 = L2;
+    LinkList PtailNode = NULL;
+    if (L1 == NULL)
+        return L2;
+    if (L2 == NULL)
+        return L1;
+    if (PL1->data<= PL2->data)
+    {
+        PnewHead = PL1;
+        PtailNode = PL1;
+        PL1 = PL1->next;
+    }
+    else
+    {
+        PnewHead = PL2;
+        PtailNode = PL2;
+        PL2 = PL2->next;
+    }
+    while (PL1&&PL2){
+
+        if (PL1->data < PL2->data)
+        {
+            PtailNode->next = PL1;
+            PL1 = PL1->next;
+        }
+        else
+        {
+            PtailNode->next= PL2;
+            PL2 = PL2->next;
+        }
+        PtailNode = PtailNode->next;
+    }
+    if (PL1 == NULL)
+        PtailNode->next = PL2;
+
+    if (PL2 == NULL)
+        PtailNode->next = PL1;
+    return PnewHead;
+}
+
+//test function
+test，c
+#define _CRT_SECURE_NO_WARNINGS 1
+typedef int DataType;
+#define NULL 0
+#include<stdio.h>
+#include<windows.h>
+#include<assert.h>
+typedef struct Node
+{
+    DataType data;
+    struct Node*next;
+}Node, *LinkList;
+void InitList(LinkList *L)
+{
+    *L = (Node*)malloc(sizeof(Node));
+    if (*L == NULL){
+        printf("failed toapply for space");
+    }
+    (*L)->next = NULL;
+    (*L)->data = NULL;
+}
+LinkList BuyNode(DataType data)
+{
+    LinkList NewNode = NULL;
+    NewNode = (LinkList)malloc(sizeof(Node));
+    if (NewNode == NULL){
+        printf("failed to create space for node");
+    }
+    NewNode->data = data;
+    NewNode->next = NULL;
+    return NewNode;
+}
+void PrintList(LinkList L)
+{
+    LinkList Cur = L;
+    if (L == NULL){
+        printf("NULL");
+    }
+    while (Cur)
+    {
+        printf("%d--->", Cur->data);
+        Cur = Cur->next;
+    }
+    printf("NULL\n");
+}
+void PushBack(LinkList* L, DataType data)
+{
+    assert(L);
+    LinkList Cur = *L;
+    if (Cur == NULL){
+        Cur = BuyNode(data);
+    }
+    while (Cur->next)
+    {
+        Cur = Cur->next;
+    }
+    Cur->next = BuyNode(data);
+}
+
+LinkList MergeLinkList(LinkList L1, LinkList L2)
+{
+    LinkList PnewHead = NULL;
+    LinkList PL1 = L1;
+    LinkList PL2 = L2;
+    LinkList PtailNode = NULL;
+    if (L1 == NULL)
+        return L2;
+    if (L2 == NULL)
+        return L1;
+    if (PL1->data<= PL2->data)
+    {
+        PnewHead = PL1;
+        PtailNode = PL1;
+        PL1 = PL1->next;
+    }
+    else
+    {
+        PnewHead = PL2;
+        PtailNode = PL2;
+        PL2 = PL2->next;
+    }
+    while (PL1&&PL2){
+
+        if (PL1->data < PL2->data)
+        {
+            PtailNode->next = PL1;
+            PL1 = PL1->next;
+        }
+        else
+        {
+            PtailNode->next= PL2;
+            PL2 = PL2->next;
+        }
+        PtailNode = PtailNode->next;
+    }
+    if (PL1 == NULL)
+        PtailNode->next = PL2;
+
+    if (PL2 == NULL)
+        PtailNode->next = PL1;
+    return PnewHead;
+}
+void test2()
+{
+    LinkList M = NULL;
+    LinkList L = NULL;
+    LinkList S = NULL;
+    InitList(&M);
+    InitList(&L);
+    PushBack(&M, 1);
+    PushBack(&M, 3);
+    PushBack(&M, 5);
+    PushBack(&L, 2);
+    PushBack(&L, 4);
+    PushBack(&L, 6);
+    ///*PopBack(&M);
+    //PopFront(&M);
+    //Erase(&M, Find(&M,3));
+    //Insert(Find(&M,0), 3);
+    //printf("%d\n",Size(M));
+    //BubbleSortLinkList(M);
+    S = MergeLinkList(L, M);
+    PrintList(S);
+}
+int main()
+{
+    test2();
+    system("pause");
+    return 0；
+ }
