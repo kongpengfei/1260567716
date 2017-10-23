@@ -1,0 +1,150 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+typedef int DataType;
+#define NULL 0
+#include<stdio.h>
+#include<windows.h>
+#include<assert.h>
+typedef struct Node
+{
+	DataType data;
+	struct Node*next;
+	struct Node*random;
+}Node, *LinkList;
+void InitList(LinkList *L)
+{
+	*L = (Node*)malloc(sizeof(Node));
+	if (*L == NULL){
+		printf("Failed to apply for memory space");
+	}
+	(*L)->next = NULL;
+}Failed to apply for memory space
+LinkList BuyNode(DataType data)
+{
+	LinkList NewNode = NULL;
+	NewNode = (LinkList)malloc(sizeof(Node));
+	if (NewNode == NULL){
+		printf("Failed to create space for the node");
+	}
+	NewNode->data = data;
+	NewNode->random =NULL;
+	NewNode->next = NULL;
+	return NewNode;
+}
+void PrintList(LinkList L)
+{
+	LinkList Cur = L;
+	if (L == NULL){
+		printf("NULL");
+
+	}
+	while (Cur)
+	{
+		if (Cur == NULL)
+			return;
+		printf("%d %d--->", Cur->data,Cur->random->data);
+		Cur = Cur->next;
+	}
+	printf("NULL\n");
+}
+void PushBack(LinkList* L, DataType data)
+{
+	assert(L);
+	LinkList Cur = *L;
+	if (Cur == NULL){
+		Cur = BuyNode(data);
+	}
+	while (Cur->next)
+	{
+		Cur = Cur->next;
+	}
+	Cur->next = BuyNode(data);
+}
+LinkList Find(LinkList L, DataType data)
+{
+	assert(L);
+	if (L == NULL){
+		return NULL;
+	}
+	LinkList Cur = L;
+	while (Cur != NULL)
+	{
+		if (Cur->data == data){
+			return Cur;
+		}
+		Cur = Cur->next;
+	}
+	return NULL;
+}
+LinkList CopyLinkListwithRandompoint(LinkList L)
+{
+	LinkList CopyL = NULL;
+	LinkList Cur = NULL;
+	LinkList Tail = NULL;
+	LinkList NewNode = NULL;
+	if (L == NULL)
+		return NULL;
+	else if (L->next == NULL)
+		CopyL = L->next;
+	Cur = L->next;
+	while (Cur->next)        //Insert the node( with the same data as the original list  ) at the back 
+	{                        //of each node of the single linked list 
+		NewNode = BuyNode(Cur->data);
+		NewNode->next = Cur->next;
+		Cur->next = NewNode;
+		Cur = NewNode->next;
+	}
+	NewNode = BuyNode(Cur->data);
+	Cur->next = NewNode;
+	Cur = L->next;                      //Assign a random point to the newly inserted node
+	while(Cur)
+	{
+		NewNode = Cur->next;
+		NewNode->random = Cur->random->next;
+		Cur = NewNode->next;
+	}            //tear down the link list to origion link list and the copyed list
+	Cur = L->next;
+	NewNode = Cur->next;
+	Cur->next = NewNode->next;
+	NewNode->next = NULL;
+	CopyL = NewNode;
+	Tail = NewNode;
+	while (1)
+	{
+		Cur = Cur->next;
+		NewNode = Cur->next;
+		if (NULL == NewNode->next)
+			break;
+		Cur->next = NewNode->next;
+		NewNode->next = NULL;
+		Tail->next = NewNode;
+		Tail = Tail->next;
+	}
+	Cur->next = NULL;
+	Tail->next = NewNode;
+	Tail = Tail->next;
+	return CopyL;
+}
+void test()
+{
+	LinkList L;
+	InitList(&L);
+	PushBack(&L, 1);
+	PushBack(&L, 2);
+	PushBack(&L, 3);
+	PushBack(&L, 4);
+	L->random = NULL;
+	LinkList L1 = Find(L, 1);
+	LinkList L2 = Find(L, 2);
+	LinkList L3 = Find(L, 3);
+	LinkList L4 = Find(L, 4);
+	L1->random = L4;
+	L2->random = L3;
+	L3->random = L1;
+	L4->random = L2;
+    PrintList(CopyLinkListwithRandompoint(L));
+}
+int main()
+{
+	test();
+	system("pause");
+	return 0;
